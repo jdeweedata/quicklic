@@ -1,0 +1,1196 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Welcome to the NPS-API server documentation.<br><p>You can find out more about Number Plate Systems (Pty) Ltd on [https://www.nptracker.co.za](https://www.nptracker.co.za).      NPS created this API interface to aid developers in intergrating NPS solutions into their projects/products.<br>Register a free account on [https://www.npscloud.co.za](https://www.npscloud.co.za/login.php) for your NPS-API access key to test the API calls on this page.<br><br>Our API usage pricing is based on credits, <b>1 Credit = R0.03</b> (see [API Cost estimator](https://api.nptracker.co.za/Cost_Estimator.html) for price breaks). You purchase credits within the system after registering and then with your credits you can purchase the available Searches and Services provided by the API. Each service cost a variant of credits for example a standard NP Tracker suspect vehicle registration number lookup cost <b>1 Credit or 3 cent</b><br><br>Do not hesitate to [contact us](https://www.nptracker.co.za/contact.html) for any assistance regarding our API's.</p><br>[Android APP NPS-SADL on Github](https://github.com/nptracker/NPS-SADL)<br>[API Cost estimator](https://api.nptracker.co.za/Cost_Estimator.html)<br>[Service Level Agreement](https://api.nptracker.co.za/SLA.html)<br>[Privacy Policy](https://api.nptracker.co.za/Privacy.html)<br>[WIKI Pages](https://wiki.nptracker.co.za)",
+      "version": "1.0.17",
+      "title": "NPS API Interfaces",
+      "termsOfService": "https://api.nptracker.co.za/LicenseAgreement.html",
+      "contact": {
+        "email": "info@nptracker.co.za"
+      }
+    },
+    "host": "api.nptracker.co.za",
+    "tags": [
+      {
+        "name": "NPS-API",
+        "description": "National suspect vehicle database lookup"
+      },
+      {
+        "name": "NPS-DL",
+        "description": "South African Drivers licence barcode decoder"
+      },
+      {
+        "name": "NPS-DLI",
+        "description": "South African Drivers licence photo decoder"
+      },
+      {
+        "name": "NPS-DLNAM",
+        "description": "Namibia Drivers licence barcode decoder"
+      },
+      {
+        "name": "NPS-ID",
+        "description": "South African ID Card barcode decoder"
+      },
+      {
+        "name": "NPS-LIC",
+        "description": "South African & Namibian Motor vehicle licence disk barcode & VIN decoder"
+      },
+      {
+        "name": "NPS-ANPR",
+        "description": "LRP/ANPR detected plates submit to NPS-CLOUD account"
+      },
+      {
+        "name": "NPS-SHARE",
+        "description": "Aimed at third-party chat and website incident reporting platforms to share intel"
+      },
+      {
+        "name": "NPS-VCR",
+        "description": "Vehicle Check Report based on Registration number or VIN"
+      },
+      {
+        "name": "NPS-CON",
+        "description": "Shipping container checker"
+      }
+    ],
+    "schemes": [
+      "https"
+    ],
+    "paths": {
+      "/NPS-API/": {
+        "get": {
+          "tags": [
+            "NPS-API"
+          ],
+          "summary": "SADC Vehicle registration lookup",
+          "description": "This is the official NPS-API interface third-party integrators can use to integrate and lookup the NP Tracker database of suspect vehicles into their apps and web services.  Contact us if you need lookups done from third party sources aswell and we can intergrate it into a solution for you.\nCosts (1 credit)<br>For bulk enquiries use our [server interface](http://api.nptracker.co.za/phpexample.html)",
+          "operationId": "NPS-API",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "cmd",
+              "in": "query",
+              "description": "Commands to execute {ADD/DEMO/NPS/MUTE/UNMUTE/PING}<br> <b>ADD</b> - Add a new lookout<br> <b>DEMO/PING</b> - Test your script is working<br> <b>NPS</b> - To do a SADC vehicle registration lookup<br> <b>MUTE</b> - Do not recieve reports for this registration<br> <b>UNMUTE</b> - Unmute a previously muted registration number<br>",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "str",
+              "in": "query",
+              "description": "The registration number to test/mute/unmute or lookout to add<br>ex. <b>ABC123GP</b>",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Query identifier",
+              "required": false,
+              "type": "integer"
+            },
+            {
+              "name": "trim",
+              "in": "query",
+              "description": "Trim message to length specified",
+              "required": false,
+              "type": "integer"
+            },
+            {
+              "name": "history",
+              "in": "query",
+              "description": "Only show lookout reports less than specified months",
+              "required": false,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-API"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-DL/": {
+        "get": {
+          "tags": [
+            "NPS-DL"
+          ],
+          "summary": "South African Drivers licence barcode decoder",
+          "description": "This is the official NPS-DL (Drivers Licence barcode decoder) interface for intergrators to use, contact us if you need lookups done from third party sources aswell and we can intergrate it into a solution for you.\nCosts (5 credits)",
+          "operationId": "NPS-DL",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "scan",
+              "in": "query",
+              "description": "The HEX encoded binary string of the PDF417 decoded South African drivers licence. ie. 019b0945000025...",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-DL"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-DLI/": {
+        "get": {
+          "tags": [
+            "NPS-DLI"
+          ],
+          "summary": "South African Drivers licence photo decoder",
+          "description": "This is the NPS-DLI (Drivers Licence photo decoder) interface for intergrators to use, it accepts the encrypted image from the decrypted barcode and display the png image (if all sounds greek to you rather use the NPS-DL endpoint).\nCosts (6 credits)",
+          "operationId": "NPS-DLI",
+          "produces": [
+            "image/png"
+          ],
+          "parameters": [
+            {
+              "name": "scan",
+              "in": "query",
+              "description": "The HEX encoded binary string of the image.",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-DL"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-DLNAM/": {
+        "get": {
+          "tags": [
+            "NPS-DLNAM"
+          ],
+          "summary": "Namibia Drivers licence barcode decoder",
+          "description": "This is the official NPS-DLNAM (Drivers Licence barcode decoder) interface for intergrators to use, contact us if you need lookups done from third party sources aswell and we can intergrate it into a solution for you.\nCosts (1 credit)",
+          "operationId": "NPS-DLNAM",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "scan",
+              "in": "query",
+              "description": "The HEX encoded binary string of the PDF417 decoded Namibia drivers licence. ie. A000000248010002...",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-DLNAM"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-LIC/": {
+        "get": {
+          "tags": [
+            "NPS-LIC"
+          ],
+          "summary": "South African Motor vehicle licence disk barcode & VIN decoder",
+          "description": "This is the official NPS-LIC interface third party intergrators can use to intergrate and lookup the NP Tracker database of suspect vehicles into their apps and webservises.   Our API includes a VIN decoder and checker that includes an image of the make + model of the vehicle. Contact us if you need lookups done from third party sources aswell and we can intergrate it into a solution for you.<br> Supported Barcodes:<br> <ul> <li>South African motor vehicle licence disk</li> <li>South African vehicle registration certificate</li> </ul>\nCosts Free",
+          "operationId": "NPS-LIC",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "scan",
+              "in": "query",
+              "description": "PDF417 barcode string ie. %MVL... (Note that the submitted HTTP GET need to be URI encoded iaw replace % with %25 ect.)",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "vin",
+              "in": "query",
+              "description": "VIN string to test (only 17 character VIN's are supported).",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-LIC"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-ID/": {
+        "get": {
+          "tags": [
+            "NPS-ID"
+          ],
+          "summary": "South African ID Card barcode decoder",
+          "description": "This is the official NPS-ID (ID Card barcode decoder) interface for intergrators to use, contact us if you need lookups done from third party sources aswell and we can intergrate it into a solution for you.\nCosts (1 credit)",
+          "operationId": "NPS-ID",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "scan",
+              "in": "query",
+              "description": "The string of the PDF417 decoded South African ID Card. ie. DOE|JOHN|M|RSA|180401...",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-ID"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-ANPR/": {
+        "get": {
+          "tags": [
+            "NPS-ANPR"
+          ],
+          "summary": "Add detected plates to your NPS-CLOUD account",
+          "description": "This endpoint are used to add the plates detected from your LRP/ANPR system to your NPS-CLOUD (https://npscloud.co.za) account, from your NPS-CLOUD account notifications, triggers and reports can be setup, contact us if you need lookups done from third party sources aswell and we can intergrate it into a solution for you.\nCosts (1 credit)",
+          "operationId": "NPS-ANPR",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "plates",
+              "in": "query",
+              "description": "Multiple detected plate candidates to be seperated by :<br> ie. ABC123GP:ABCL23GP:A8C123GP...",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "token",
+              "in": "query",
+              "description": "ANPR Token (Available on https://npscloud.co.za Login -> ANPR Feeds)",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "event",
+              "in": "query",
+              "description": "Event ID used to classify plate groups together.",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "confidence",
+              "in": "query",
+              "description": "Multiple detected plate confidence (0-100) to be seperated by :<br> ie. 99:80:60...",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-ANPR"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-SHARE/": {
+        "get": {
+          "tags": [
+            "NPS-SHARE"
+          ],
+          "summary": "Share incident reports between platforms",
+          "description": "This endpoint are used to share vehicle lookout reports between partnered sites contact us to setup an account.\nCosts (Free)",
+          "operationId": "NPS-SHARE",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "token",
+              "in": "query",
+              "description": "Application Token (Available from info@nptracker.co.za)",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "message",
+              "in": "query",
+              "description": "URI encoded message to share and to lookup plates against the NP Tracker suspect and suspicious vehicle database.",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-SHARE"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-VCR/": {
+        "get": {
+          "tags": [
+            "NPS-VCR"
+          ],
+          "summary": "Vehicle Check Report",
+          "description": "This endpoint are used to provide details on a vehicle based on its VIN or registration number.\nCosts (1 credit)",
+          "operationId": "NPS-VCR",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "vinregs",
+              "in": "query",
+              "description": "Vehicle registration number or VIN number to look up.",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-VCR"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      },
+      "/NPS-CON/": {
+        "get": {
+          "tags": [
+            "NPS-CON"
+          ],
+          "summary": "Shipping container checker",
+          "description": "This endpoint are used to provide details on a shipping containers.\nCosts (10 credits)",
+          "operationId": "NPS-CON",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "token",
+              "in": "query",
+              "description": "API-Key (Available on https://npscloud.co.za Login -> NPS-API)",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "code",
+              "in": "query",
+              "description": "Shipping container ISO-6346 code to look up.ex. MEDU6193764",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/NPS-CON"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value"
+            }
+          }
+        }
+      }
+  
+    },
+    "definitions": {
+      "NPS-API": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "response_ms": {
+                  "type": "integer"
+                },
+                "plate": {
+                  "type": "string"
+                },
+                "desc": {
+                  "type": "string"
+                },
+                "last_date": {
+                  "type": "string"
+                },
+                "report_date": {
+                  "type": "string"
+                },
+                "result": {
+                  "type": "boolean"
+                },
+                "version": {
+                  "type": "string"
+                }
+              }
+            },
+            "example": {
+              "id": "1",
+              "response_ms": "123",
+              "plate": "ABC123GP",
+              "desc": "The following lookouts was recieved via our API:\n**@** 2001-01-01 15:08:02 <ABC123GP> If you see this my stolen White Toyota Jaris vehicle please contact Lyttelton SAPD CAS00/0000 or the owner at 0835646366.",
+              "last_date": "2002-02-06 08:03:45",
+              "report_date": "2001-01-01 15:08:02",
+              "result": "true",
+              "version": "0105"
+            }
+          }
+        }
+      },
+      "NPS-LIC": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "VIN": {
+                  "type": "string"
+                },
+                "scan_plate": {
+                  "type": "string"
+                },
+                "scan_manuf": {
+                  "type": "string"
+                },
+                "scan_model": {
+                  "type": "string"
+                },
+                "scan_class": {
+                  "type": "string"
+                },
+                "scan_colour": {
+                  "type": "string"
+                },
+                "scan_eng": {
+                  "type": "string"
+                },
+                "scan_type": {
+                  "type": "string"
+                },
+                "pic_url": {
+                  "type": "string"
+                },
+                "manufacturer": {
+                  "type": "string"
+                },
+                "plant": {
+                  "type": "string"
+                },
+                "brand": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "engine": {
+                  "type": "string"
+                },
+                "colour": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "string"
+                },
+                "checks": {
+                  "type": "object",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "np_tracker": {
+                        "type": "string"
+                      },
+                      "external": {
+                        "type": "string"
+                      },
+                      "expire": {
+                        "type": "string"
+                      },
+                      "manufacturer": {
+                        "type": "string"
+                      },
+                      "model": {
+                        "type": "string"
+                      },
+                      "engine": {
+                        "type": "string"
+                      },
+                      "colour": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "unlock": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "example": {
+              "VIN": "ABC12345678900000",
+              "scan_plate": "ABC123GP",
+              "scan_manuf": "VOLKSWAGEN",
+              "scan_model": "POLO CLASSIC",
+              "scan_class": "Sedan (closed top)",
+              "scan_eng": "ABC000001",
+              "scan_date": "20180731",
+              "scan_type": "MVL",
+              "pic_url": "https://api.nptracker.co.za/images/VIN/A/ABCDEFGHI.jpg",
+              "manufacturer": "VOLKSWAGEN (South Africa)",
+              "plant": "-",
+              "brand": "VOLKSWAGEN",
+              "model": "POLO CLASSIC",
+              "year": "2010",
+              "engine_number": "-",
+              "TokensLeft": "123",
+              "checks": {
+                "np_tracker": "true",
+                "external": "lock",
+                "expired": "false",
+                "manufacturer": "true",
+                "model": "true",
+                "engine": "na",
+                "colour": "na"
+              },
+              "unlock": "true"
+            }
+          }
+        }
+      },
+      "NPS-ID": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Version": {
+                  "type": "string"
+                },
+                "Name": {
+                  "type": "string"
+                },
+                "Surname": {
+                  "type": "string"
+                },
+                "IDNo": {
+                  "type": "string"
+                },
+                "Citizen": {
+                  "type": "string"
+                },
+                "IssuedBy": {
+                  "type": "string"
+                },
+                "Issued": {
+                  "type": "string"
+                },
+                "Gender": {
+                  "type": "string"
+                },
+                "checks": {
+                  "type": "object",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "age": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "unlock": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "example": {
+              "Version": "1",
+              "Name": "John",
+              "Surname": "Doe",
+              "IDNo": "1804010000000",
+              "Citizen": "CITIZEN",
+              "IssuedBy": "RSA",
+              "Issued": "01 APR 2015",
+              "Gender": "Male",
+              "TokensLeft": "123",
+              "checks": {
+                "age": "40"
+              },
+              "unlock": "true"
+            }
+          }
+        }
+      },
+      "NPS-ANPR": {
+        "type": "object",
+        "properties": {
+          "validplate": {
+            "type": "boolean"
+          },
+          "responce_ms": {
+            "type": "integer"
+          }
+        }
+      },
+      "NPS-DL": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "User_IP": {
+                  "type": "string"
+                },
+                "EncryptionVersion": {
+                  "type": "string"
+                },
+                "BarcodeVersion": {
+                  "type": "string"
+                },
+                "Citizen": {
+                  "type": "string"
+                },
+                "Initial": {
+                  "type": "string"
+                },
+                "Surname": {
+                  "type": "string"
+                },
+                "DOB": {
+                  "type": "string"
+                },
+                "IDNo": {
+                  "type": "string"
+                },
+                "IssuedBy": {
+                  "type": "string"
+                },
+                "LicNo": {
+                  "type": "string"
+                },
+                "Issued": {
+                  "type": "string"
+                },
+                "ValidFrom": {
+                  "type": "string"
+                },
+                "ValidTo": {
+                  "type": "string"
+                },
+                "Code": {
+                  "type": "object",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Licence1": {
+                        "type": "string"
+                      },
+                      "Licence2": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "Unlock": {
+                  "type": "boolean"
+                },
+                "Version": {
+                  "type": "string"
+                },
+                "checks": {
+                  "type": "object",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "VehRestr": {
+                        "type": "string"
+                      },
+                      "UserRest": {
+                        "type": "string"
+                      },
+                      "PrDR": {
+                        "type": "string"
+                      },
+                      "expired": {
+                        "type": "boolean"
+                      },
+                      "age": {
+                        "type": "integer"
+                      },
+                      "gender": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "filename": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "User_IP": "192.168.1.1",
+              "EncryptionVersion": "1",
+              "BarcodeVersion": "1",
+              "Citizen": "ZA",
+              "Initial": "J",
+              "Surname": "Doe",
+              "DOB": "01-04-2018",
+              "IDNo": "1804015000000",
+              "IssuedBy": "ZA",
+              "LicNo": "40000000AB0A",
+              "Issued": "01-04-1990",
+              "ValidFrom": "01-04-2015",
+              "ValidTo": "01-04-2020",
+              "Code": {
+                "Licence1": "A",
+                "Licence2": "EB"
+              },
+              "Unlock": "true",
+              "Version": "0100",
+              "TokensLeft": "123",
+              "checks": {
+                "VehRestr": "None",
+                "UserRestr": "None",
+                "PrDR": "",
+                "expired": "false",
+                "age": "1",
+                "gender": "Male",
+                "url": "https://api.nptracker.co.za/images/DL/ABCDEFGHI.png",
+                "filename": "/images/DL/ABCDEFGHI.png"
+              }
+            }
+          }
+        }
+      },
+      "NPS-DLNAM": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "User_IP": {
+                  "type": "string"
+                },
+                "Name": {
+                  "type": "string"
+                },
+                "Surname": {
+                  "type": "string"
+                },
+                "DOB": {
+                  "type": "string"
+                },
+                "IDNo": {
+                  "type": "string"
+                },
+                "IssuedBy": {
+                  "type": "string"
+                },
+                "LicNo": {
+                  "type": "string"
+                },
+                "Issued": {
+                  "type": "string"
+                },
+                "ValidFrom": {
+                  "type": "string"
+                },
+                "ValidTo": {
+                  "type": "string"
+                },
+                "Code": {
+                  "type": "object",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Licence1": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "Unlock": {
+                  "type": "boolean"
+                },
+                "Version": {
+                  "type": "string"
+                },
+                "TokensLeft": {
+                  "type": "int"
+                },
+                "checks": {
+                  "type": "object",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "VehRestr": {
+                        "type": "string"
+                      },
+                      "UserRest": {
+                        "type": "string"
+                      },
+                      "expired": {
+                        "type": "boolean"
+                      },
+                      "age": {
+                        "type": "integer"
+                      },
+                      "gender": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "User_IP": "192.168.1.1",
+              "Name": "John",
+              "Surname": "Doe",
+              "DOB": "01-04-2018",
+              "IDNo": "180401500",
+              "IssuedBy": "NAM",
+              "LicNo": "5000000000ZM",
+              "Issued": "01-04-1990",
+              "ValidFrom": "01-04-2015",
+              "ValidTo": "01-04-2020",
+              "Code": {
+                "Licence1": "B"
+              },
+              "Unlock": "true",
+              "Issue": "01",
+              "Version": "01.00",
+              "checks": {
+                "VehRestr": "-",
+                "UserRestr": "-",
+                "expired": "false",
+                "age": "1",
+                "gender": "Male"
+              },
+              "TokensLeft": "123"
+            }
+          }
+        }
+      },
+      "NPS-SHARE": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "report": {
+                  "type": "boolean"
+                },
+                "plate": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            },
+            "example": {
+              "report": "true",
+              "plate": "ABC123GP",
+              "url": "https://www.nptracker.co.za/reports/zZzZzZzZ.html"
+            }
+          }
+        }
+      },
+      "NPS-VCR": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "plate": {
+                  "type": "string"
+                },
+                "Make": {
+                  "type": "string"
+                },
+                "Model": {
+                  "type": "string"
+                },
+                "Description": {
+                  "type": "string"
+                },
+                "Colour": {
+                  "type": "string"
+                },
+                "VIN": {
+                  "type": "string"
+                },
+                "Engine": {
+                  "type": "string"
+                },
+                "SourceID": {
+                  "type": "string"
+                },
+                "PictureURL": {
+                  "type": "string"
+                },
+                "NPTracker": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "example": {
+              "plate": "ABC123GP",
+              "Make": "CHEVROLET",
+              "Model": "CAPTIVA",
+              "Description": "CAPTIVA 2.4 LT A/T",
+              "Colour": "White",
+              "VIN": "KL1FCxXxXxXx",
+              "Engine": "LE914XxXx",
+              "SourceID": "0",
+              "PictureURL": "https://api.nptracker.co.za/images/VIN/zZzZzZ.jpg"
+            }
+          }
+        }
+      },
+      "NPS-CON": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "items": {
+              "type": "object",
+              "properties": {
+                "plate": {
+                  "type": "string"
+                },
+                "Make": {
+                  "type": "string"
+                },
+                "Model": {
+                  "type": "string"
+                },
+                "Description": {
+                  "type": "string"
+                },
+                "Colour": {
+                  "type": "string"
+                },
+                "VIN": {
+                  "type": "string"
+                },
+                "Engine": {
+                  "type": "string"
+                },
+                "SourceID": {
+                  "type": "string"
+                },
+                "PictureURL": {
+                  "type": "string"
+                },
+                "NPTracker": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "example": {
+              "company": "MSC- MEDITERRANEAN SHIPPING COMPANY S.A.",
+              "address": {
+                  "streetAddress": "CHEMIN RIEU 12-14",
+                  "Zip": "CH 1208",
+                  "City": "GENEVE",
+                  "Country": "Switzerland",
+                  "Telephone": "+41 22 703 8669",
+                  "Fax": "+41 22 703 8787"
+              },
+              "website": "http://www.msc.com",
+              "bic-code": "MEDU",
+              "prefix": "MED",
+              "equipment-identifier": "U",
+              "serial-number": "619376",
+              "check-digit": "4",
+              "detail-st": "2210",
+              "tare-kg": "2280",
+              "max-payload-kg": "28200",
+              "codeholder": "MSC- MEDITERRANEAN SHIPPING COMPANY S.A.",
+              "container-number": "MEDU6193764",
+              "history": [
+              {"1": {
+                  "Location": "SANTIAGO, RM, CL",
+                  "Description": "Empty in Container Yard",
+                  "Date": "March 17, 2020 "}
+              }],
+              "ISO-6346-compliant": true
+  
+            }
+          }
+        }
+      }
+    },
+    "externalDocs": {
+      "description": "Find out more about NP Tracker",
+      "url": "https://nptracker.co.za/history.html"
+    }
+  }
